@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using StarSecurityServices.BussinessLayer;
 using StarSecurityServices.Data;
+using StarSecurityServices.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,8 +12,21 @@ var provider = builder.Services.BuildServiceProvider();
 var config = provider.GetRequiredService<IConfiguration>();
 
 builder.Services.AddDbContext<AuthContext>(o => o.UseSqlServer(config.GetConnectionString("Default")));
-builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<AuthContext>().AddDefaultTokenProviders();
+builder.Services.AddIdentity<AspNetUsers, IdentityRole>().AddEntityFrameworkStores<AuthContext>().AddDefaultTokenProviders();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+
+builder.Services.AddDistributedMemoryCache(); // Session store
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
+});
+
+
 var app = builder.Build();
+
+// Create roles during application startup
+CreateRoles(app).Wait();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -24,6 +39,7 @@ if (!app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 
+
 app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
@@ -33,3 +49,22 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();
+
+
+async Task CreateRoles(IHost app)
+{
+    var scope = app.Services.CreateScope();
+    var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+    var userManager = scope.ServiceProvider.GetRequiredService<UserManager<AspNetUsers>>();
+
+    string[] roleNames = { "Admin", "User", "Manager" };
+
+    foreach (var roleName in roleNames)
+    {
+        var roleExist = await roleManager.RoleExistsAsync(roleName);
+        if (!roleExist)
+        {
+            await roleManager.CreateAsync(new IdentityRole(roleName));
+        }
+    }
+}

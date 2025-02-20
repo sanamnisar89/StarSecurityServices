@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using StarSecurityServices.Models;
 
 namespace StarSecurityServices.Data
 {
@@ -11,6 +12,12 @@ namespace StarSecurityServices.Data
         {
             base.OnModelCreating(builder);
         }
+
+        public DbSet<Employee> Employees { get; set; }
+
+        //public DbSet<Services> Services { get; set; }
+
+        //public DbSet<Careers> Careers { get; set; }
     }
 
 
