@@ -70,6 +70,12 @@ namespace StarSecurityServices.Controllers
 
             return BadRequest(result.Errors);
         }
+
+        [HttpGet("Profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            return View();
+        }
     }
 }
 
