@@ -15,6 +15,9 @@ namespace StarSecurityServices.Data
 
         public DbSet<Employee> Employees { get; set; }
 
+        public DbSet<Contact> Contacts { get; set; }
+
+
         //public DbSet<Services> Services { get; set; }
 
         //public DbSet<Careers> Careers { get; set; }

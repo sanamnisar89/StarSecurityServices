@@ -12,7 +12,6 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <link rel="shortcut icon" href="~/images/favicon.png" type="image/x-icon">
-
     <title>Guarder</title>
 
     <!-- bootstrap core css -->
@@ -38,6 +37,32 @@
         }
         
     }
+
+   @{
+        var successMessage = TempData["SuccessMessage"];
+        var errorMessage = TempData["ErrorMessage"];
+    }
+
+    @if (successMessage != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @successMessage
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
+    @if (errorMessage != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            @errorMessage
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+    }
+
     <div>
         @RenderBody()
     </div>
@@ -60,7 +85,7 @@
                 </div>
                 <div class="col-md-3">
                     <div class="info_links">
-                        <h5>
+                       <h5>
                             Useful Link
                         </h5>
                         <ul>

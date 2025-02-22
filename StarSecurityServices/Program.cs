@@ -22,7 +22,6 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromMinutes(30); // Set session timeout
 });
 
-
 var app = builder.Build();
 
 // Create roles during application startup
