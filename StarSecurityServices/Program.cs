@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AuthContext>(o => o.UseSqlServer(config.GetConnect
 builder.Services.AddIdentity<AspNetUsers, IdentityRole>().AddEntityFrameworkStores<AuthContext>().AddDefaultTokenProviders();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IContactRepository, ContactRepository>();
 
 builder.Services.AddDistributedMemoryCache(); // Session store
 builder.Services.AddSession(options =>

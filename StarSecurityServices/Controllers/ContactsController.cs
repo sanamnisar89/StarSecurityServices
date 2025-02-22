@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using StarSecurityServices.BussinessLayer;
 using StarSecurityServices.Data;
 using StarSecurityServices.Models;
 
@@ -12,17 +13,18 @@ namespace StarSecurityServices.Controllers
 {
     public class ContactsController : Controller
     {
-        private readonly AuthContext _context;
+        private readonly IContactRepository _contactRepository;
 
-        public ContactsController(AuthContext context)
+        public ContactsController(IContactRepository contactRepository)
         {
-            _context = context;
+            _contactRepository = contactRepository;
         }
 
         // GET: Contacts
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Contacts.ToListAsync());
+            var contacts = await _contactRepository.GetAllAsync();
+            return View(contacts);
         }
 
         // GET: Contacts/Details/5
@@ -33,8 +35,7 @@ namespace StarSecurityServices.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var contact = await _contactRepository.GetByIdAsync(id.Value);
             if (contact == null)
             {
                 return NotFound();
@@ -50,8 +51,6 @@ namespace StarSecurityServices.Controllers
         }
 
         // POST: Contacts/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Email,Number,Message,SubmittedAt")] Contact contact)
@@ -60,16 +59,13 @@ namespace StarSecurityServices.Controllers
             {
                 try
                 {
-                    _context.Add(contact);
-                    await _context.SaveChangesAsync();
-                    TempData["SuccessMessage"] =
-                        "Your contact request has been successfully submitted!";
+                    await _contactRepository.AddAsync(contact);
+                    TempData["SuccessMessage"] = "Your contact request has been successfully submitted!";
                     return RedirectToAction(nameof(Create));
                 }
                 catch (Exception)
                 {
-                    TempData["ErrorMessage"] =
-                        "An error occurred while submitting your request. Please try again later.";
+                    TempData["ErrorMessage"] = "An error occurred while submitting your request. Please try again later.";
                 }
             }
             return View(contact);
@@ -83,7 +79,7 @@ namespace StarSecurityServices.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts.FindAsync(id);
+            var contact = await _contactRepository.GetByIdAsync(id.Value);
             if (contact == null)
             {
                 return NotFound();
@@ -92,8 +88,6 @@ namespace StarSecurityServices.Controllers
         }
 
         // POST: Contacts/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Email,Number,Message,SubmittedAt")] Contact contact)
@@ -107,12 +101,11 @@ namespace StarSecurityServices.Controllers
             {
                 try
                 {
-                    _context.Update(contact);
-                    await _context.SaveChangesAsync();
+                    await _contactRepository.UpdateAsync(contact);
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (Exception)
                 {
-                    if (!ContactExists(contact.Id))
+                    if (!await _contactRepository.ExistsAsync(contact.Id))
                     {
                         return NotFound();
                     }
@@ -134,8 +127,7 @@ namespace StarSecurityServices.Controllers
                 return NotFound();
             }
 
-            var contact = await _context.Contacts
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var contact = await _contactRepository.GetByIdAsync(id.Value);
             if (contact == null)
             {
                 return NotFound();
@@ -149,19 +141,9 @@ namespace StarSecurityServices.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var contact = await _context.Contacts.FindAsync(id);
-            if (contact != null)
-            {
-                _context.Contacts.Remove(contact);
-            }
-
-            await _context.SaveChangesAsync();
+            await _contactRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-
-        private bool ContactExists(int id)
-        {
-            return _context.Contacts.Any(e => e.Id == id);
-        }
     }
+
 }
