@@ -71,11 +71,20 @@ namespace StarSecurityServices.Controllers
             return BadRequest(result.Errors);
         }
 
-        [HttpGet("Profile")]
-        public async Task<IActionResult> GetProfile()
+        [HttpGet("Profile/{id}")]
+        public async Task<IActionResult> GetProfile(string id)
         {
-            return View();
+            var employee = await _userRepository.GetEmployeeViewModelAsync(id);
+
+            if (employee == null)
+            {
+                return NotFound();
+            }
+
+            return View(employee);
         }
+
+        
     }
 }
 

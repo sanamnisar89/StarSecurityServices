@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using StarSecurityServices.Data;
 using StarSecurityServices.Models;
+using StarSecurityServices.ViewModels;
 
 namespace StarSecurityServices.BussinessLayer
 {
@@ -13,12 +14,13 @@ namespace StarSecurityServices.BussinessLayer
         private readonly AuthContext _context;
 
 
-        public UserRepository(UserManager<AspNetUsers> userManager, SignInManager<AspNetUsers> signManager, AuthContext context) {
+        public UserRepository(UserManager<AspNetUsers> userManager, SignInManager<AspNetUsers> signManager, AuthContext context)
+        {
 
             _signManager = signManager;
             _userManager = userManager;
             _context = context;
-        
+
         }
 
         public async Task<IdentityResult> RegisterUserAsync(AspNetUsers user, string password)
@@ -32,7 +34,7 @@ namespace StarSecurityServices.BussinessLayer
                 // Sign in the user
                 await _signManager.SignInAsync(user, isPersistent: false);
             }
-            
+
             return result;
         }
 
@@ -48,12 +50,40 @@ namespace StarSecurityServices.BussinessLayer
         public async Task<bool> IsEmailExist(string email)
         {
             var checkEmail = await _userManager.FindByEmailAsync(email);
-            if (checkEmail != null) { 
-                    return true;
-            
+            if (checkEmail != null)
+            {
+                return true;
+
             }
 
-                return false;
+            return false;
+        }
+
+        public async Task<ProfileVM> GetEmployeeViewModelAsync(string employeeId)
+        {
+            var employee = await _context.Employees
+                .Include(e => e.AspNetUsers)  // Include AspNetUsers if needed (e.g., for Role)
+                .FirstOrDefaultAsync(e => e.AspNetUsersId == employeeId);
+
+            if (employee == null)
+            {
+                return null; // Employee not found
+            }
+
+            var viewModel = new ProfileVM
+            {
+                Name = employee.Name,
+                Role = "",//employee.AspNetUsers?.Role, 
+                Address = employee.Address,
+                ContactNo = employee.ContactNumber,
+                EducationQualification = employee.EducationalQualification,
+                EmployeeCode = employee.EmployeeCode,
+                Department = "",
+                Grade = "",// employee.AspNetUsers?.Grade, // Assuming AspNetUsers has a Grade field
+                Client = null //GetClientList(employee.Id) // Example method to get client list related to employee
+            };
+
+            return viewModel;
         }
     }
 }

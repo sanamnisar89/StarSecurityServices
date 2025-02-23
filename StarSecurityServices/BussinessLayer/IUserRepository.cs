@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using StarSecurityServices.Models;
+using StarSecurityServices.ViewModels;
 
 namespace StarSecurityServices.BussinessLayer
 {
@@ -10,5 +11,7 @@ namespace StarSecurityServices.BussinessLayer
         Task<bool> CreateEmployeeAsync(Employee employee);
 
         Task<bool> IsEmailExist(string email);
+
+        Task<ProfileVM> GetEmployeeViewModelAsync(string employeeId);
     }
 }
