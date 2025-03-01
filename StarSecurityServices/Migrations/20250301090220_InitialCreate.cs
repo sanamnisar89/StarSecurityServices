@@ -68,6 +68,22 @@ namespace StarSecurityServices.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "Network",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Region = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactPerson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    ContactNumber = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Network", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -233,6 +249,9 @@ namespace StarSecurityServices.Migrations
 
             migrationBuilder.DropTable(
                 name: "Contacts");
+
+            migrationBuilder.DropTable(
+                name: "Network");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

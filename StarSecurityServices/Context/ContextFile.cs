@@ -13,5 +13,6 @@ namespace StarSecurityServices.Context
     {
         // DbSets for your models
         public required DbSet<Contact> Contacts { get; set; }
+        public DbSet<StarSecurityServices.Models.Network> Network { get; set; } = default!;
     }
 }
