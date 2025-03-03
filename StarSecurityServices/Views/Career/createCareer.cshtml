@@ -1,0 +1,80 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+
+@model StarSecurityServices.ViewModels.CareerVM
+
+@{
+    ViewData["Title"] = "Create Career";
+    Layout = "_Layout";
+}
+
+<!-- contact section -->
+
+<section class="contact_section layout_padding">
+    <div class="contact_bg_box">
+        <div class="img-box">
+            <img src="~/images/contact-bg.jpg" alt="Background Image">
+        </div>
+    </div>
+    <div class="container">
+        <div class="heading_container heading_center">
+            <h2>
+                Create a Job Opening
+            </h2>
+        </div>
+        <div class="row">
+            <div class="col-md-7 mx-auto">
+                <form asp-action="CreateCareer" method="post">
+                    <div class="contact_form-container">
+                        <!-- Job Title -->
+                        <div class="form-group">
+                            <input asp-for="JobTitle" type="text" placeholder="Job Title" class="form-control" />
+                            <span asp-validation-for="JobTitle" class="text-danger"></span>
+                        </div>
+
+                        <!-- Company Name -->
+                        <div class="form-group">
+                            <input asp-for="CompanyName" type="text" placeholder="Company Name" class="form-control" />
+                            <span asp-validation-for="CompanyName" class="text-danger"></span>
+                        </div>
+
+                        <!-- Department -->
+                        <div class="form-group">
+                            <input asp-for="Department" type="text" placeholder="Department" class="form-control" />
+                            <span asp-validation-for="Department" class="text-danger"></span>
+                        </div>
+
+                        <!-- Start Date -->
+                        <div class="form-group">
+                            <input asp-for="StartDate" type="date" placeholder="Start Date" class="form-control" />
+                            <span asp-validation-for="StartDate" class="text-danger"></span>
+                        </div>
+
+                        <!-- End Date -->
+                        <div class="form-group">
+                            <input asp-for="EndDate" type="date" placeholder="End Date (optional)" class="form-control" />
+                            <span asp-validation-for="EndDate" class="text-danger"></span>
+                        </div>
+
+                        <!-- Job Description -->
+                        <div class="form-group">
+                            <textarea asp-for="JobDescription" placeholder="Job Description" class="form-control" rows="4"></textarea>
+                            <span asp-validation-for="JobDescription" class="text-danger"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="btn-box">
+                            <button type="submit" class="btn btn-primary">
+                                Create
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end contact section -->

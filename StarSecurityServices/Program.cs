@@ -16,6 +16,7 @@ builder.Services.AddIdentity<AspNetUsers, IdentityRole>().AddEntityFrameworkStor
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IContactRepository, ContactRepository>();
+builder.Services.AddScoped<ICareerRepository, CareerRepository>();
 
 builder.Services.AddDistributedMemoryCache(); // Session store
 builder.Services.AddSession(options =>
