@@ -13,7 +13,5 @@ namespace StarSecurityServices.Models
         [Required]
         public string Description { get; set; }
 
-        [Required]
-        public string ImagePath { get; set; }
     }
 }

@@ -19,7 +19,10 @@ namespace StarSecurityServices.Data
 
         public DbSet<Career> Career { get; set; }
 
-        //public DbSet<Services> Services { get; set; }
+        public DbSet<Network> Network { get; set; }
+
+        public DbSet<Services> Services { get; set; }
+
 
     }
 

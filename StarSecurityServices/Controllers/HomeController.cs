@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StarSecurityServices.Models;
 
 namespace StarSecurityServices.Controllers
@@ -12,7 +13,7 @@ namespace StarSecurityServices.Controllers
         {
             _logger = logger;
         }
-
+       
         public IActionResult Index()
         {
             return View();
